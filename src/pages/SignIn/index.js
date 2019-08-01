@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaSpinner } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -7,6 +8,8 @@ import * as Yup from 'yup';
 import logo from '~/assets/images/logo.svg';
 
 import { signInRequest } from '~/store/modules/auth/actions';
+
+import { SubmitButton } from '~/pages/_layouts/auth/styles';
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -17,6 +20,7 @@ const schema = Yup.object().shape({
 
 export default function SignIn() {
   const dispatch = useDispatch();
+  const loading = useSelector(state => state.auth.loading);
 
   function handleSubmit({ email, password }) {
     dispatch(signInRequest(email, password));
@@ -33,7 +37,9 @@ export default function SignIn() {
           type="password"
           placeholder="Sua senha secreta"
         />
-        <button type="submit">Entrar</button>
+        <SubmitButton loading={loading ? 1 : 0}>
+          {loading ? <FaSpinner size={16} color="#fff" /> : 'Entrar'}
+        </SubmitButton>
         <Link to="/register">Criar conta grátis</Link>
       </Form>
     </>
