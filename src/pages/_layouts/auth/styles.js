@@ -61,5 +61,12 @@ export const Content = styled.div`
         opacity: 1;
       }
     }
+
+    span {
+      color: #c8bd5b;
+      align-self: flex-start;
+      margin: 0 0 10px;
+      font-weight: bold;
+    }
   }
 `;
