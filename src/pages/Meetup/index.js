@@ -1,34 +1,68 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { format, parseISO } from 'date-fns';
+import pt from 'date-fns/locale/pt';
+// import Loader from 'react-loader-spinner';
 
-import { Container, MeetupItem, MeetupList, NewMeetupButton } from './styles';
+import api from '~/services/api';
+
+import {
+  Container,
+  MeetupItem,
+  MeetupList,
+  NewMeetupButton,
+  Loading,
+} from './styles';
 
 export default function Meetup() {
+  const [loading, setLoading] = useState(true);
+  const [meetups, setMeetups] = useState([]);
+
+  useEffect(() => {
+    async function loadMeetups() {
+      const response = await api.get('organizing');
+
+      const data = response.data.map(meetup => {
+        return {
+          ...meetup,
+          formattedDate: format(
+            parseISO(meetup.date),
+            "dd 'de' MMMM, 'às' HH'h'",
+            {
+              locale: pt,
+            }
+          ),
+        };
+      });
+
+      setMeetups(data);
+      setLoading(false);
+    }
+
+    loadMeetups();
+  }, []);
+
   return (
     <Container>
-      <header>
-        <h1>Meus meetups</h1>
-        <NewMeetupButton>Novo meetup</NewMeetupButton>
-      </header>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <header>
+            <h1>Meus meetups</h1>
+            <NewMeetupButton>Novo meetup</NewMeetupButton>
+          </header>
 
-      <MeetupList>
-        <MeetupItem>
-          <Link to="/">Novo meetup React</Link>
-          <time>05 de agosto de 2019</time>
-        </MeetupItem>
-        <MeetupItem>
-          <Link to="/">React Native na prática</Link>
-          <time>06 de agosto de 2019</time>
-        </MeetupItem>
-        <MeetupItem>
-          <Link to="/">Fundamentos de Node.js</Link>
-          <time>07 de agosto de 2019</time>
-        </MeetupItem>
-        <MeetupItem>
-          <Link to="/">Criando uma aplicação do zero com Node.js</Link>
-          <time>08 de agosto de 2019</time>
-        </MeetupItem>
-      </MeetupList>
+          <MeetupList>
+            {meetups.map(meetup => (
+              <MeetupItem key={meetup.id}>
+                <Link to="/">{meetup.title}</Link>
+                <time>{meetup.formattedDate}</time>
+              </MeetupItem>
+            ))}
+          </MeetupList>
+        </>
+      )}
     </Container>
   );
 }

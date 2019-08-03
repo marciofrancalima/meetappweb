@@ -1,5 +1,8 @@
 import styled, { css, keyframes } from 'styled-components';
 import { darken } from 'polished';
+import Loader from 'react-loader-spinner';
+
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 export const Container = styled.div`
   max-width: 800px;
@@ -95,4 +98,15 @@ export const NewMeetupButton = styled.button.attrs(props => ({
         animation: ${rotate} 2s linear infinite;
       }
     `}
+`;
+
+export const Loading = styled(Loader).attrs({
+  type: 'Oval',
+  color: '#f94d6a',
+  height: 100,
+})`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
 `;
