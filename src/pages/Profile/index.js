@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
-import { FaSpinner } from 'react-icons/fa';
 
 import { Container, SubmitButton } from './styles';
+import Loading from '~/components/Loading';
 
 import { updateProfileRequest } from '~/store/modules/user/actions';
 
@@ -33,7 +33,7 @@ export default function Profile() {
         />
 
         <SubmitButton loading={loading ? 1 : 0}>
-          {loading ? <FaSpinner size={16} color="#fff" /> : 'Atualizar'}
+          {loading ? <Loading height={20} /> : 'Atualizar'}
         </SubmitButton>
       </Form>
     </Container>

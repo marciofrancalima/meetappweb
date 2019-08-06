@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
-// import Loader from 'react-loader-spinner';
 
 import api from '~/services/api';
 
 import {
   Container,
+  Wrapper,
   MeetupItem,
   MeetupList,
   NewMeetupButton,
-  Loading,
 } from './styles';
+
+import Loading from '~/components/Loading';
 
 export default function Meetup() {
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ export default function Meetup() {
           ...meetup,
           formattedDate: format(
             parseISO(meetup.date),
-            "dd 'de' MMMM, 'às' HH'h'",
+            "dd 'de' MMMM, 'às' HH:mm",
             {
               locale: pt,
             }
@@ -45,18 +46,20 @@ export default function Meetup() {
   return (
     <Container>
       {loading ? (
-        <Loading />
+        <Wrapper>
+          <Loading color="#f94d6a" height={100} />
+        </Wrapper>
       ) : (
         <>
           <header>
             <h1>Meus meetups</h1>
-            <NewMeetupButton>Novo meetup</NewMeetupButton>
+            <NewMeetupButton to="/meetup">Novo meetup</NewMeetupButton>
           </header>
 
           <MeetupList>
             {meetups.map(meetup => (
               <MeetupItem key={meetup.id}>
-                <Link to="/">{meetup.title}</Link>
+                <Link to={`/meetup/${meetup.id}`}>{meetup.title}</Link>
                 <time>{meetup.formattedDate}</time>
               </MeetupItem>
             ))}

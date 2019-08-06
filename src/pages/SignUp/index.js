@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FaSpinner } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -8,6 +7,7 @@ import * as Yup from 'yup';
 import logo from '~/assets/images/logo.svg';
 
 import { SubmitButton } from '~/pages/_layouts/auth/styles';
+import Loading from '~/components/Loading';
 
 import { signUpRequest } from '~/store/modules/auth/actions';
 
@@ -42,7 +42,7 @@ export default function SignUp() {
           placeholder="Sua senha secreta"
         />
         <SubmitButton loading={loading ? 1 : 0}>
-          {loading ? <FaSpinner size={16} color="#fff" /> : 'Criar conta'}
+          {loading ? <Loading height={20} /> : 'Criar conta'}
         </SubmitButton>
         <Link to="/">Já tenho login</Link>
       </Form>

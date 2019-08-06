@@ -1,8 +1,7 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { darken } from 'polished';
 import Loader from 'react-loader-spinner';
-
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
   max-width: 800px;
@@ -19,6 +18,14 @@ export const Container = styled.div`
       font-weight: bold;
     }
   }
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 800px;
+  margin: 30px auto;
 `;
 
 export const MeetupList = styled.ul`
@@ -55,25 +62,12 @@ export const MeetupItem = styled.li`
   }
 `;
 
-const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-`;
-
-export const NewMeetupButton = styled.button.attrs(props => ({
-  type: 'button',
-  disabled: props.loading,
-}))`
-  width: 100%;
-  margin: 10px 0 0;
+export const NewMeetupButton = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 37px;
   width: 140px;
-  align-self: flex-end;
   background: #f94d6a;
   font-size: 16px;
   font-weight: bold;
@@ -85,19 +79,6 @@ export const NewMeetupButton = styled.button.attrs(props => ({
   &:hover {
     background: ${darken(0.08, '#f94d6a')};
   }
-
-  &[disabled] {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  ${props =>
-    props.loading &&
-    css`
-      svg {
-        animation: ${rotate} 2s linear infinite;
-      }
-    `}
 `;
 
 export const Loading = styled(Loader).attrs({
