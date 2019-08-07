@@ -55,6 +55,7 @@ export const MeetupItem = styled.li`
     color: #fff;
     font-size: 16px;
     font-weight: 600;
+    opacity: ${props => (props.past ? 0.3 : 1)};
   }
 
   &:hover {
@@ -66,7 +67,7 @@ export const MeetupItem = styled.li`
   }
 
   time {
-    opacity: 0.8;
+    opacity: ${props => (props.past ? 0.3 : 1)};
   }
 `;
 

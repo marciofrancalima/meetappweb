@@ -32,10 +32,9 @@ export default function Update({ match }) {
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        const message = String(error.response.data.message);
-        toast.error(message);
-
-        history.push('/dashboard');
+        toast.error(
+          'Os dados não foram carregados. Entre em contato com o suporte'
+        );
       }
     }
 
@@ -53,7 +52,8 @@ export default function Update({ match }) {
       history.push('/dashboard');
     } catch (error) {
       setLoading(false);
-      const message = String(error.response.message);
+      const message = String(error.response.data.message);
+
       toast.error(message);
     }
   }

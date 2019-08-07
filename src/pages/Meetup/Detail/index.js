@@ -41,10 +41,10 @@ export default function Detail({ match }) {
 
         setLoading(false);
       } catch (error) {
-        const message = String(error.response.data.message);
-
-        toast.error(message);
-        history.push('/dashboard');
+        setLoading(false);
+        toast.error(
+          'Os dados não foram carregados. Entre em contato com o suporte'
+        );
       }
     }
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isBefore } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 
+import { toast } from 'react-toastify';
 import api from '~/services/api';
 
 import {
@@ -29,29 +30,37 @@ export default function Meetup() {
 
   useEffect(() => {
     async function loadMeetups() {
-      const response = await api.get('organizing', {
-        params: {
-          per_page,
-          page,
-        },
-      });
+      try {
+        const response = await api.get('organizing', {
+          params: {
+            per_page,
+            page,
+          },
+        });
 
-      const data = response.data.rows.map(meetup => {
-        return {
-          ...meetup,
-          formattedDate: format(
-            parseISO(meetup.date),
-            "dd 'de' MMMM, 'às' HH:mm",
-            {
-              locale: pt,
-            }
-          ),
-        };
-      });
+        const data = response.data.rows.map(meetup => {
+          return {
+            ...meetup,
+            formattedDate: format(
+              parseISO(meetup.date),
+              "dd 'de' MMMM, 'às' HH:mm",
+              {
+                locale: pt,
+              }
+            ),
+            past: isBefore(parseISO(meetup.date), Date.now()),
+          };
+        });
 
-      setTotalMeetups(response.data.count);
-      setMeetups(data);
-      setLoading(false);
+        setTotalMeetups(response.data.count);
+        setMeetups(data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          'Os dados não foram carregados. Entre em contato com o suporte'
+        );
+      }
     }
 
     loadMeetups();
@@ -77,7 +86,7 @@ export default function Meetup() {
 
           <MeetupList>
             {meetups.map(meetup => (
-              <MeetupItem key={meetup.id}>
+              <MeetupItem key={meetup.id} past={meetup.past}>
                 <Link to={`/meetup/${meetup.id}`}>{meetup.title}</Link>
                 <time>{meetup.formattedDate}</time>
               </MeetupItem>
