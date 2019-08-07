@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { darken } from 'polished';
-import Loader from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
@@ -18,6 +17,15 @@ export const Container = styled.div`
       font-weight: bold;
     }
   }
+
+  strong {
+    color: #fff;
+    font-size: 20px;
+    font-weight: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const Wrapper = styled.div`
@@ -34,7 +42,7 @@ export const MeetupList = styled.ul`
 
 export const MeetupItem = styled.li`
   width: 100%;
-  margin: 10px 0;
+  margin: 10px;
   padding: 15px 50px 15px 15px;
   background: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -81,13 +89,28 @@ export const NewMeetupButton = styled(Link)`
   }
 `;
 
-export const Loading = styled(Loader).attrs({
-  type: 'Oval',
-  color: '#f94d6a',
-  height: 100,
-})`
+export const Actions = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: 100px;
+  justify-content: center;
+
+  button {
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background: #f94d6a;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+
+    &:hover {
+      background: ${darken(0.08, '#f94d6a')};
+    }
+
+    &[disabled] {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
 `;

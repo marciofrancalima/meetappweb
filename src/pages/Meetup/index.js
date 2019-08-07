@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
@@ -11,19 +11,32 @@ import {
   MeetupItem,
   MeetupList,
   NewMeetupButton,
+  Actions,
 } from './styles';
 
 import Loading from '~/components/Loading';
 
+// Limit Per Page
+const per_page = 5;
+
 export default function Meetup() {
   const [loading, setLoading] = useState(true);
   const [meetups, setMeetups] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalMeetups, setTotalMeetups] = useState(0);
+
+  const totalPages = useMemo(() => totalMeetups / per_page, [totalMeetups]);
 
   useEffect(() => {
     async function loadMeetups() {
-      const response = await api.get('organizing');
+      const response = await api.get('organizing', {
+        params: {
+          per_page,
+          page,
+        },
+      });
 
-      const data = response.data.map(meetup => {
+      const data = response.data.rows.map(meetup => {
         return {
           ...meetup,
           formattedDate: format(
@@ -36,12 +49,18 @@ export default function Meetup() {
         };
       });
 
+      setTotalMeetups(response.data.count);
       setMeetups(data);
       setLoading(false);
     }
 
     loadMeetups();
-  }, []);
+  }, [page, totalPages]);
+
+  function handlePage(action) {
+    const newPage = action === 'back' ? page - 1 : page + 1;
+    setPage(newPage);
+  }
 
   return (
     <Container>
@@ -65,6 +84,29 @@ export default function Meetup() {
             ))}
           </MeetupList>
         </>
+      )}
+
+      {!loading && totalPages < 1 && (
+        <strong>Você ainda não tem meetups cadastrados</strong>
+      )}
+
+      {totalPages > 1 && (
+        <Actions>
+          <button
+            type="button"
+            onClick={() => handlePage('back')}
+            disabled={page < 2}
+          >
+            Anterior
+          </button>
+          <button
+            type="button"
+            onClick={() => handlePage('next')}
+            disabled={totalPages <= page}
+          >
+            Próximo
+          </button>
+        </Actions>
       )}
     </Container>
   );
