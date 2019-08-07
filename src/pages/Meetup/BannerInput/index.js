@@ -23,7 +23,7 @@ export default function BannerInput() {
     }
 
     // eslint-disable-next-line
-  }, [ref, registerField]);
+  }, [ref.current, registerField]);
 
   async function handleChange(e) {
     const data = new FormData();

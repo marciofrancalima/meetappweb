@@ -15,6 +15,32 @@ export const Container = styled.div`
       color: #fff;
       font-size: 32px;
       font-weight: bold;
+
+      span {
+        font-size: 14px;
+        font-weight: normal;
+        color: #c8bd5b;
+      }
+    }
+
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      button {
+        margin-right: 8px;
+        background: none;
+        border: 1px solid #fff;
+        border-radius: 4px;
+        padding: 5px;
+        color: #fff;
+        font-size: 12px;
+
+        &:hover {
+          background: ${darken(0.03, '#f94d6a')};
+        }
+      }
     }
   }
 
@@ -42,7 +68,7 @@ export const MeetupList = styled.ul`
 
 export const MeetupItem = styled.li`
   width: 100%;
-  margin: 10px;
+  margin: 10px 0;
   padding: 15px 50px 15px 15px;
   background: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -56,14 +82,10 @@ export const MeetupItem = styled.li`
     font-size: 16px;
     font-weight: 600;
     opacity: ${props => (props.past ? 0.3 : 1)};
-  }
 
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
+    &:hover {
+      color: ${darken(0.03, '#f94d6a')};
+    }
   }
 
   time {
@@ -77,6 +99,7 @@ export const NewMeetupButton = styled(Link)`
   justify-content: center;
   height: 37px;
   width: 140px;
+  margin-left: 10px;
   background: #f94d6a;
   font-size: 16px;
   font-weight: bold;

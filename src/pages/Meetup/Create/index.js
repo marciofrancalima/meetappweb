@@ -25,7 +25,7 @@ export default function Create() {
       history.push('/dashboard');
     } catch (error) {
       setLoading(false);
-      const message = String(error.response.message);
+      const message = String(error.response.data.message);
       toast.error(message);
     }
   }

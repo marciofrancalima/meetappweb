@@ -25,6 +25,7 @@ export default function Meetup() {
   const [meetups, setMeetups] = useState([]);
   const [page, setPage] = useState(1);
   const [totalMeetups, setTotalMeetups] = useState(0);
+  const [filtered, setFiltered] = useState('all');
 
   const totalPages = useMemo(() => totalMeetups / per_page, [totalMeetups]);
 
@@ -35,6 +36,7 @@ export default function Meetup() {
           params: {
             per_page,
             page,
+            filter: filtered,
           },
         });
 
@@ -64,38 +66,64 @@ export default function Meetup() {
     }
 
     loadMeetups();
-  }, [page, totalPages]);
+  }, [page, totalPages, filtered]);
 
   function handlePage(action) {
     const newPage = action === 'back' ? page - 1 : page + 1;
     setPage(newPage);
   }
 
+  function handleFiltered(filter) {
+    setFiltered(filter);
+  }
+
   return (
     <Container>
-      {loading ? (
+      {loading && (
         <Wrapper>
           <Loading color="#f94d6a" height={100} />
         </Wrapper>
-      ) : (
-        <>
-          <header>
-            <h1>Meus meetups</h1>
-            <NewMeetupButton to="/meetup">Novo meetup</NewMeetupButton>
-          </header>
-
-          <MeetupList>
-            {meetups.map(meetup => (
-              <MeetupItem key={meetup.id} past={meetup.past}>
-                <Link to={`/meetup/${meetup.id}`}>{meetup.title}</Link>
-                <time>{meetup.formattedDate}</time>
-              </MeetupItem>
-            ))}
-          </MeetupList>
-        </>
       )}
 
-      {!loading && totalPages < 1 && (
+      {!loading && (
+        <header>
+          <h1>
+            {filtered === 'all'
+              ? 'Meus meetups'
+              : filtered === 'next'
+              ? 'Meetups agendados'
+              : 'Meetups realizados'}{' '}
+            <span>{totalMeetups ? `(${totalMeetups})` : ''}</span>
+          </h1>
+
+          <div>
+            <button type="button" onClick={() => handleFiltered('all')}>
+              Todos
+            </button>
+            <button type="button" onClick={() => handleFiltered('next')}>
+              Agendados
+            </button>
+            <button type="button" onClick={() => handleFiltered('past')}>
+              Realizados
+            </button>
+
+            <NewMeetupButton to="/meetup">Novo meetup</NewMeetupButton>
+          </div>
+        </header>
+      )}
+
+      {!loading && (
+        <MeetupList>
+          {meetups.map(meetup => (
+            <MeetupItem key={meetup.id} past={meetup.past}>
+              <Link to={`/meetup/${meetup.id}`}>{meetup.title}</Link>
+              <time>{meetup.formattedDate}</time>
+            </MeetupItem>
+          ))}
+        </MeetupList>
+      )}
+
+      {!loading && totalPages === 0 && (
         <strong>Você ainda não tem meetups cadastrados</strong>
       )}
 

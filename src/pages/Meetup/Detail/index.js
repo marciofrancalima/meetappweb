@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isBefore } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -37,6 +37,7 @@ export default function Detail({ match }) {
               locale: pt,
             }
           ),
+          past: isBefore(parseISO(response.data.date), new Date()),
         });
 
         setLoading(false);
@@ -75,10 +76,16 @@ export default function Detail({ match }) {
           <header>
             <h1>{meetup.title}</h1>
             <div>
-              <EditButton edit={true ? 1 : 0} to={`/meetup/${meetup.id}/edit`}>
+              <EditButton
+                to={`/meetup/${meetup.id}/edit`}
+                disabled={meetup.past ? 1 : 0}
+              >
                 Editar
               </EditButton>
-              <CancelButton onClick={() => handleDelete(meetup.id)}>
+              <CancelButton
+                onClick={() => handleDelete(meetup.id)}
+                disabled={meetup.past ? 1 : 0}
+              >
                 Cancelar
               </CancelButton>
             </div>

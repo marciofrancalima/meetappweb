@@ -60,6 +60,11 @@ export const EditButton = styled(Link)`
   &:hover {
     background: ${darken(0.08, '#4DBAF9')};
   }
+
+  &[disabled] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
 `;
 
 export const CancelButton = styled.button`
@@ -79,6 +84,11 @@ export const CancelButton = styled.button`
 
   &:hover {
     background: ${darken(0.08, '#f94d6a')};
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 `;
 
