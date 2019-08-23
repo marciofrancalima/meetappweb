@@ -81,7 +81,7 @@ export const MeetupItem = styled.li`
     color: #fff;
     font-size: 16px;
     font-weight: 600;
-    opacity: ${props => (props.past ? 0.3 : 1)};
+    opacity: ${props => (props.done ? 0.3 : 1)};
 
     &:hover {
       color: ${darken(0.03, '#f94d6a')};
@@ -89,7 +89,7 @@ export const MeetupItem = styled.li`
   }
 
   time {
-    opacity: ${props => (props.past ? 0.3 : 1)};
+    opacity: ${props => (props.done ? 0.3 : 1)};
   }
 `;
 

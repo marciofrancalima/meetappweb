@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { format, parseISO, isBefore } from 'date-fns';
-import pt from 'date-fns/locale/pt';
-
 import { toast } from 'react-toastify';
+
 import api from '~/services/api';
+import { formatDateWithHour, isDone } from '~/util/dateUtils';
 
 import {
   Container,
@@ -25,7 +24,7 @@ export default function Meetup() {
   const [meetups, setMeetups] = useState([]);
   const [page, setPage] = useState(1);
   const [totalMeetups, setTotalMeetups] = useState(0);
-  const [filtered, setFiltered] = useState('all');
+  const [filtered, setFiltered] = useState('next');
 
   const totalPages = useMemo(() => totalMeetups / per_page, [totalMeetups]);
 
@@ -43,14 +42,8 @@ export default function Meetup() {
         const data = response.data.rows.map(meetup => {
           return {
             ...meetup,
-            formattedDate: format(
-              parseISO(meetup.date),
-              "dd 'de' MMMM, 'às' HH:mm",
-              {
-                locale: pt,
-              }
-            ),
-            past: isBefore(parseISO(meetup.date), Date.now()),
+            formattedDate: formatDateWithHour(meetup.date),
+            done: isDone(meetup.date),
           };
         });
 
@@ -77,6 +70,17 @@ export default function Meetup() {
     setFiltered(filter);
   }
 
+  function handleTitlePage(filter) {
+    switch (filter) {
+      case 'next':
+        return 'Meetups agendados';
+      case 'all':
+        return 'Meus meetups';
+      default:
+        return 'Meetups realizados';
+    }
+  }
+
   return (
     <Container>
       {loading && (
@@ -88,25 +92,20 @@ export default function Meetup() {
       {!loading && (
         <header>
           <h1>
-            {filtered === 'all'
-              ? 'Meus meetups'
-              : filtered === 'next'
-              ? 'Meetups agendados'
-              : 'Meetups realizados'}{' '}
+            {handleTitlePage(filtered)}{' '}
             <span>{totalMeetups ? `(${totalMeetups})` : ''}</span>
           </h1>
 
           <div>
-            <button type="button" onClick={() => handleFiltered('all')}>
-              Todos
-            </button>
             <button type="button" onClick={() => handleFiltered('next')}>
               Agendados
             </button>
             <button type="button" onClick={() => handleFiltered('past')}>
               Realizados
             </button>
-
+            <button type="button" onClick={() => handleFiltered('all')}>
+              Todos
+            </button>
             <NewMeetupButton to="/meetup">Novo meetup</NewMeetupButton>
           </div>
         </header>
@@ -115,7 +114,7 @@ export default function Meetup() {
       {!loading && (
         <MeetupList>
           {meetups.map(meetup => (
-            <MeetupItem key={meetup.id} past={meetup.past}>
+            <MeetupItem key={meetup.id} done={meetup.done}>
               <Link to={`/meetup/${meetup.id}`}>{meetup.title}</Link>
               <time>{meetup.formattedDate}</time>
             </MeetupItem>

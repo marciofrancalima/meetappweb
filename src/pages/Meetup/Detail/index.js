@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { format, parseISO, isBefore } from 'date-fns';
-import pt from 'date-fns/locale/pt';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { MdSchedule, MdLocationOn } from 'react-icons/md';
 
 import api from '~/services/api';
 import history from '~/services/history';
+import { formatDateWithHour, isDone } from '~/util/dateUtils';
 
 import {
   Container,
@@ -30,14 +29,8 @@ export default function Detail({ match }) {
 
         setMeetup({
           ...response.data,
-          formattedDate: format(
-            parseISO(response.data.date),
-            "dd 'de' MMMM, 'às' HH:mm",
-            {
-              locale: pt,
-            }
-          ),
-          past: isBefore(parseISO(response.data.date), new Date()),
+          formattedDate: formatDateWithHour(response.data.date),
+          done: isDone(response.data.date),
         });
 
         setLoading(false);
@@ -78,13 +71,13 @@ export default function Detail({ match }) {
             <div>
               <EditButton
                 to={`/meetup/${meetup.id}/edit`}
-                disabled={meetup.past ? 1 : 0}
+                disabled={meetup.done ? 1 : 0}
               >
                 Editar
               </EditButton>
               <CancelButton
                 onClick={() => handleDelete(meetup.id)}
-                disabled={meetup.past ? 1 : 0}
+                disabled={meetup.done ? 1 : 0}
               >
                 Cancelar
               </CancelButton>
