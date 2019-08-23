@@ -4,6 +4,8 @@ import { Form, Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 import { parseISO } from 'date-fns';
 
+import { meetupValidation } from '~/util/validations';
+
 import api from '~/services/api';
 import history from '~/services/history';
 
@@ -65,7 +67,11 @@ export default function Update({ match }) {
           <Loading color="#f94d6a" height={100} />
         </Wrapper>
       ) : (
-        <Form onSubmit={handleSubmit} initialData={meetup}>
+        <Form
+          schema={meetupValidation}
+          onSubmit={handleSubmit}
+          initialData={meetup}
+        >
           <BannerInput name="file_id" />
 
           <Input name="title" placeholder="Título do meetup" />

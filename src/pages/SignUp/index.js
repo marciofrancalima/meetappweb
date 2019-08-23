@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Form, Input } from '@rocketseat/unform';
-import * as Yup from 'yup';
+
+import { signUpValidation } from '~/util/validations';
 
 import logo from '~/assets/images/logo.svg';
 
@@ -10,16 +11,6 @@ import { SubmitButton } from '~/pages/_layouts/auth/styles';
 import Loading from '~/components/Loading';
 
 import { signUpRequest } from '~/store/modules/auth/actions';
-
-const schema = Yup.object().shape({
-  name: Yup.string().required('Nome é obrigatório'),
-  email: Yup.string()
-    .email('Digite um e-mail válido')
-    .required('Email é obrigatório'),
-  password: Yup.string()
-    .min(6, 'Senha tem que ter no mínimo 6 caracteres ')
-    .required('Senha é obrigatória'),
-});
 
 export default function SignUp() {
   const dispatch = useDispatch();
@@ -33,7 +24,7 @@ export default function SignUp() {
     <>
       <img src={logo} alt="Meetapp" />
 
-      <Form schema={schema} onSubmit={handleSubmit}>
+      <Form schema={signUpValidation} onSubmit={handleSubmit}>
         <Input name="name" placeholder="Nome completo" />
         <Input name="email" type="email" placeholder="Digite seu e-mail" />
         <Input

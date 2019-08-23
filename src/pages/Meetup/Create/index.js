@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Form, Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 
+import { meetupValidation } from '~/util/validations';
+
 import api from '~/services/api';
 import history from '~/services/history';
 
@@ -32,7 +34,7 @@ export default function Create() {
 
   return (
     <Container>
-      <Form onSubmit={handleSubmit}>
+      <Form schema={meetupValidation} onSubmit={handleSubmit}>
         <BannerInput name="file_id" />
 
         <Input name="title" placeholder="Título do meetup" />
